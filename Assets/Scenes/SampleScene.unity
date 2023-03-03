@@ -705,7 +705,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vineVelocityWhenGrabbed: {x: 10.29, y: 15.5}
-  speed: 50
+  moveSpeed: 5
+  jumpForce: 10
+  dashDistance: 5
+  dashTime: 0.5
 --- !u!247 &509840420
 ConstantForce2D:
   m_ObjectHideFlags: 0
@@ -1180,8 +1183,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 741793352}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0145, y: -2.85, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.014500141, y: -2.85, z: 0}
   m_LocalScale: {x: 1, y: 0.6101433, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2616,13 +2619,15 @@ GameObject:
   m_Component:
   - component: {fileID: 2112107444}
   - component: {fileID: 2112107445}
+  - component: {fileID: 2112107446}
+  - component: {fileID: 2112107447}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2112107444
 Transform:
   m_ObjectHideFlags: 0
@@ -2667,6 +2672,44 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &2112107446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112107443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2705332bbdc903d4fa091c1c613fbafc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vineVelocityWhenGrabbed: {x: 0, y: 0}
+  moveSpeed: 5
+  jumpForce: 10
+  dashDistance: 5
+  dashTime: 0.5
+--- !u!50 &2112107447
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112107443}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2118819267
 GameObject:
   m_ObjectHideFlags: 0
