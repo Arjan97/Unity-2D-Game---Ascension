@@ -139,7 +139,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.tag == "Vine")
         {
-            other.GetComponent<Rigidbody2D>().velocity = vineVelocityWhenGrabbed;
+            other.GetComponent<Rigidbody2D>().velocity = vineVelocityWhenGrabbed + rb.velocity;
             swinging = true;
             anim.SetBool("isSlinging", true);
             anim.SetBool("isJumping", false);
