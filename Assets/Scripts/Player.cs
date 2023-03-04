@@ -83,7 +83,7 @@ public class Player : MonoBehaviour
 
                 anim.SetBool("isSlinging", false);
                 anim.SetBool("isJumping", true);
-                rb.velocity = new Vector2(currentSwingable.GetComponent<Rigidbody2D>().velocity.x, currentSwingable.GetComponent<Rigidbody2D>().velocity.y + 30);
+                rb.velocity = new Vector2(currentSwingable.GetComponent<Rigidbody2D>().velocity.x, currentSwingable.GetComponent<Rigidbody2D>().velocity.y + 10);
 
             }
         } 
