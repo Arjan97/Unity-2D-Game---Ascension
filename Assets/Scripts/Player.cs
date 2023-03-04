@@ -26,18 +26,31 @@ public class Player : MonoBehaviour
 
     //animations
     public Animator anim;
+    /*
+    //Grappling
+    private LineRenderer lineRend;
+    private DistanceJoint2D distJoint;
+    private Node selectedNode;
+    */
     // Start is called before the first frame update
     void Start()
     {
         myConstantForce = GetComponent<ConstantForce2D>();
         rb = GetComponent<Rigidbody2D>(); //rb equals the rigidbody on the player
         scaleX = transform.localScale.x;
+        /*
+        //grapple inits
+        lineRend = GetComponent<LineRenderer>();
+        distJoint = GetComponent<DistanceJoint2D>();
+        lineRend.enabled = false;
+        distJoint.enabled = false;
+        selectedNode = null; */
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //NodeBehavior();
         //Player movement init
         horizontalMove = Input.GetAxisRaw("Horizontal");
         anim.SetFloat("Speed", Mathf.Abs(horizontalMove));
@@ -60,14 +73,14 @@ public class Player : MonoBehaviour
         }
 
         //dash and jump
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded && !isDashing)
         {
                 rb.velocity = Vector2.up * jumpForce;
                 isGrounded = false;
                 anim.SetBool("isJumping", true);
         } 
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && isGrounded)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && isGrounded && (Input.GetAxisRaw("Horizontal") > 0 || Input.GetAxisRaw("Horizontal") < 0))
         {
             StartCoroutine(Dash());
         }
@@ -146,4 +159,37 @@ public class Player : MonoBehaviour
             currentSwingable = other.transform;
         }
     }
+    /*
+    //grappling codes
+    public void SelectNode(Node node)
+    {
+        selectedNode = node;
+    }
+
+    public void DeselectNode()
+    {
+        selectedNode = null;
+    }
+
+    private void NodeBehavior()
+    {
+        if (selectedNode == null)
+        {
+            lineRend.enabled = false;
+            distJoint.enabled = false;
+
+            return;
+        }
+
+        lineRend.enabled = true;
+        distJoint.enabled = true;
+
+        distJoint.connectedBody = selectedNode.GetComponent<Rigidbody2D>();
+
+        if(selectedNode != null)
+        {
+            lineRend.SetPosition(0, transform.position);
+            lineRend.SetPosition(1, selectedNode.transform.position);
+        }
+    } */
 }
