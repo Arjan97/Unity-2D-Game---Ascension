@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
     Transform currentSwingable;
     ConstantForce2D myConstantForce;
     bool swinging = false;
-    float swingForce = 10f;
     //player movement
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
@@ -84,7 +83,8 @@ public class Player : MonoBehaviour
 
                 anim.SetBool("isSlinging", false);
                 anim.SetBool("isJumping", true);
-                rb.velocity = new Vector2(currentSwingable.GetComponent<Rigidbody2D>().velocity.x, currentSwingable.GetComponent<Rigidbody2D>().velocity.y + swingForce);
+                rb.velocity = new Vector2(currentSwingable.GetComponent<Rigidbody2D>().velocity.x, currentSwingable.GetComponent<Rigidbody2D>().velocity.y + 30);
+
             }
         } 
     }
