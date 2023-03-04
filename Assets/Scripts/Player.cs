@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
     private float scaleX;
 
     //animations
-    //public Animator anim;
+    public Animator anim;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,35 +38,37 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*
-        movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
-        if(Input.GetAxisRaw("Horizontal") != 0)
+
+        //Player movement init
+        horizontalMove = Input.GetAxisRaw("Horizontal");
+        anim.SetFloat("Speed", Mathf.Abs(horizontalMove));
+
+        //flip sprite and set anims
+        if (Input.GetAxisRaw("Horizontal") != 0)
         {
             if(Input.GetAxisRaw("Horizontal") > 0)
             {
-                anim.Play("Walk");
+                transform.localScale = new Vector3(scaleX, transform.localScale.y, transform.localScale.z);
             }
             else
             {
-                anim.Play("WalkBack");
+                transform.localScale = new Vector3(-scaleX, transform.localScale.y, transform.localScale.z);
             }
         }
         else
         {
-            anim.Play("Idle");
-        } */
+            anim.SetTrigger("Idle");
+        }
 
-        //Player movement init
-        horizontalMove = Input.GetAxisRaw("Horizontal");
         //dash and jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
                 rb.velocity = Vector2.up * jumpForce;
                 isGrounded = false;
-        }
+                anim.SetBool("isJumping", true);
+        } 
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && isGrounded)
         {
             StartCoroutine(Dash());
         }
@@ -82,20 +84,6 @@ public class Player : MonoBehaviour
                 rb.velocity = new Vector2(currentSwingable.GetComponent<Rigidbody2D>().velocity.x, currentSwingable.GetComponent<Rigidbody2D>().velocity.y + swingForce);
             }
         } 
-        /*
-        if (swinging)
-        {
-            // Set the player's position to the swingable's position and orientation
-            transform.position = currentSwingable.position;
-            transform.rotation = currentSwingable.rotation;
-
-            // Release the player from the vine if they press the jump button
-            if (Input.GetButtonDown("Jump"))
-            {
-                swinging = false;
-                rb.velocity = currentSwingable.right * swingForce;
-            }
-        } */
     }
 
     private void FixedUpdate()
@@ -106,7 +94,6 @@ public class Player : MonoBehaviour
 
     public void Move()
     {
-        Flip();
         rb.velocity = new Vector2(horizontalMove * moveSpeed, rb.velocity.y);
 
         //dash
@@ -122,18 +109,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Flip()
-    {
-        if (horizontalMove > 0)
-        {
-            transform.localScale = new Vector3(scaleX, transform.localScale.y, transform.localScale.z);
-        }
-        if (horizontalMove < 0)
-        {
-            transform.localScale = new Vector3((-1) * scaleX, transform.localScale.y, transform.localScale.z);
-        }
-    }
-
     //Grounded checker
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -141,6 +116,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
+            anim.SetBool("isJumping", false);
         }
     }
 
@@ -150,8 +126,9 @@ public class Player : MonoBehaviour
         isDashing = true;
         dashDirection = new Vector2(Mathf.Sign(horizontalMove), 0f);
 
+        anim.SetBool("isSliding", true);
         yield return new WaitForSeconds(dashTime);
-
+        anim.SetBool("isSliding", false);
         isDashing = false;
     }
 
