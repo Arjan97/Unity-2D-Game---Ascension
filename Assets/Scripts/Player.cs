@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Security.Cryptography;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
     Transform currentSwingable;
     ConstantForce2D myConstantForce;
     bool swinging = false;
+    float swingForce = 10f;
     //player movement
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
@@ -60,15 +62,15 @@ public class Player : MonoBehaviour
         //dash and jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.velocity = Vector2.up * jumpForce;
-            isGrounded = false;
+                rb.velocity = Vector2.up * jumpForce;
+                isGrounded = false;
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
         {
             StartCoroutine(Dash());
         }
-
+        
         //player swinging
         if (swinging)
         {
@@ -77,9 +79,23 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 swinging = false;
-                rb.velocity = currentSwingable.GetComponent<Rigidbody2D>().velocity;
+                rb.velocity = new Vector2(currentSwingable.GetComponent<Rigidbody2D>().velocity.x, currentSwingable.GetComponent<Rigidbody2D>().velocity.y + swingForce);
             }
-        }
+        } 
+        /*
+        if (swinging)
+        {
+            // Set the player's position to the swingable's position and orientation
+            transform.position = currentSwingable.position;
+            transform.rotation = currentSwingable.rotation;
+
+            // Release the player from the vine if they press the jump button
+            if (Input.GetButtonDown("Jump"))
+            {
+                swinging = false;
+                rb.velocity = currentSwingable.right * swingForce;
+            }
+        } */
     }
 
     private void FixedUpdate()
