@@ -81,6 +81,9 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 swinging = false;
+
+                anim.SetBool("isSlinging", false);
+                anim.SetBool("isJumping", true);
                 rb.velocity = new Vector2(currentSwingable.GetComponent<Rigidbody2D>().velocity.x, currentSwingable.GetComponent<Rigidbody2D>().velocity.y + swingForce);
             }
         } 
@@ -138,6 +141,8 @@ public class Player : MonoBehaviour
         {
             other.GetComponent<Rigidbody2D>().velocity = vineVelocityWhenGrabbed;
             swinging = true;
+            anim.SetBool("isSlinging", true);
+            anim.SetBool("isJumping", false);
             currentSwingable = other.transform;
         }
     }
