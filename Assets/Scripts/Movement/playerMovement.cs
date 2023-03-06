@@ -5,9 +5,17 @@ using UnityEngine;
 
 public class playerMovement : MonoBehaviour
 {
+    //movementbasics
     public float speed = 10f;
     private bool isFacingRight = true;
     private float horizontal;
+
+    //wall slide
+    private bool isTouchingWall;
+    public Transform wallCheck;
+    public float wallCheckDistance;
+    private bool isWallSliding;
+    public float wallSlideSpeed;
 
     //jump
     private bool isJumping;
@@ -19,17 +27,20 @@ public class playerMovement : MonoBehaviour
     //able to jump slightly above ground
     private float jumpBufferTime = 0.2f;
     private float jumpBufferCounter;
-
-    private ConstantForce2D myConstantForce;
-    private Rigidbody2D rb;
+    //groundcheck
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+
+    //components
+    private ConstantForce2D myConstantForce;
+    private Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start()
     {
         myConstantForce = GetComponent<ConstantForce2D>();
         rb = GetComponent<Rigidbody2D>(); //rb equals the rigidbody on the player
+        isTouchingWall = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, groundLayer);
     }
 
     // Update is called once per frame
@@ -74,29 +85,65 @@ public class playerMovement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
             coyoteTimeCounter = 0f;
         }
+        CheckIfWallSliding();
         Flip();
     }
     //fixed is called twice per frame
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        ApplyMovement();
+    }
+
+    private void ApplyMovement()
+    {
+        if (IsGrounded())
+        {
+            rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        } else if(!IsGrounded() && !isWallSliding && horizontal != 0){
+            rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        }
+
+        if (isWallSliding)
+        {
+            if (rb.velocity.y < -wallSlideSpeed)
+            {
+                Debug.Log("aids muur kk");
+                rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
+            }
+        }
+    }
+
+    private void CheckIfWallSliding()
+    {
+        if(IsTouchingWall() && !IsGrounded() && rb.velocity.y < 0) 
+        {
+            isWallSliding = true;
+            Debug.Log("kk muur aan");
+        }
+        else
+        {
+            isWallSliding = false;
+        }
     }
 
     private void Flip()
     {
         if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
-            Vector3 localScale = transform.localScale;
             isFacingRight = !isFacingRight;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+            transform.Rotate(0.0f, 180.0f, 0.0f);
         }
     }
-
 
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+    }
+
+    private bool IsTouchingWall()
+    {
+
+        return Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, groundLayer);
     }
 
     private IEnumerator JumpCooldown()
@@ -104,5 +151,10 @@ public class playerMovement : MonoBehaviour
         isJumping = true;
         yield return new WaitForSeconds(0.4f);
         isJumping = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y, wallCheck.position.z));
     }
 }
