@@ -16,11 +16,17 @@ public class playerMovement : MonoBehaviour
     public float wallCheckDistance;
     private bool isWallSliding;
     public float wallSlideSpeed;
+    private bool canWallSlide = true;
+    //wall jump
+    public float wallJumpDuration;
+    bool canWallJump = true;
+    private int facingDirection = 1;
+    [SerializeField] private Vector2 wallJumpDirection;
 
     //jump
     private bool isJumping;
     public float jumpingPower = 16f;
-    private bool doubleJump;
+    //private bool doubleJump;
     //able to jump after not being grounded for a slight delay
     private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
@@ -34,24 +40,48 @@ public class playerMovement : MonoBehaviour
     //components
     private ConstantForce2D myConstantForce;
     private Rigidbody2D rb;
+    private playerJetpack jet;
 
     // Start is called before the first frame update
     void Start()
     {
         myConstantForce = GetComponent<ConstantForce2D>();
         rb = GetComponent<Rigidbody2D>(); //rb equals the rigidbody on the player
-        isTouchingWall = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, groundLayer);
+        jet = GetComponent<playerJetpack>();
     }
 
     // Update is called once per frame
     void Update()
+    {
+        Jumps();
+        JetToggle();
+        CheckIfWallSliding();
+        Flip();
+    }
+    //fixed is called twice per frame
+    private void FixedUpdate()
+    {
+            ApplyMovement();
+    }
+    private void Jumps()
+    {
+        if (isWallSliding && canWallJump)
+        {
+            WallJump();
+        } else 
+        {
+            Jump();
+        }
+    }
+
+    private void Jump()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
 
         if (IsGrounded() && !Input.GetButton("Jump"))
         {
             coyoteTimeCounter = coyoteTime;
-            doubleJump= false;
+            //doubleJump= false;
         }
         else
         {
@@ -61,11 +91,11 @@ public class playerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             jumpBufferCounter = jumpBufferTime;
-            if (IsGrounded() || doubleJump)
+            /*if (IsGrounded() || doubleJump)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
                 doubleJump = !doubleJump;
-            }
+            }*/
         }
         else
         {
@@ -85,13 +115,27 @@ public class playerMovement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
             coyoteTimeCounter = 0f;
         }
-        CheckIfWallSliding();
-        Flip();
     }
-    //fixed is called twice per frame
-    private void FixedUpdate()
+
+    private void WallJump()
     {
-        ApplyMovement();
+        //wallslide jump
+        Debug.Log("walljumping smeh");
+        if (Input.GetButton("Jump"))
+        {
+            Vector2 direction = new Vector2(wallJumpDirection.x * -facingDirection, wallJumpDirection.y);
+            rb.AddForce(direction, ForceMode2D.Impulse);
+        }
+    }
+
+    private void JetToggle()
+    {
+        //toggle jetpack
+        if (Input.GetKeyUp(KeyCode.J))
+        {
+            jet.enabled = !jet.enabled;
+        }
+
     }
 
     private void ApplyMovement()
@@ -103,11 +147,15 @@ public class playerMovement : MonoBehaviour
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
         }
 
-        if (isWallSliding)
+        if (Input.GetAxis("Vertical") < 0)
+        {
+            canWallSlide = false;
+        }
+
+        if (isWallSliding && canWallSlide)
         {
             if (rb.velocity.y < -wallSlideSpeed)
             {
-                Debug.Log("aids muur kk");
                 rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
             }
         }
@@ -118,7 +166,6 @@ public class playerMovement : MonoBehaviour
         if(IsTouchingWall() && !IsGrounded() && rb.velocity.y < 0) 
         {
             isWallSliding = true;
-            Debug.Log("kk muur aan");
         }
         else
         {
@@ -130,12 +177,13 @@ public class playerMovement : MonoBehaviour
     {
         if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
+            facingDirection = facingDirection * -1;
             isFacingRight = !isFacingRight;
             transform.Rotate(0.0f, 180.0f, 0.0f);
         }
     }
 
-    private bool IsGrounded()
+    public bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }

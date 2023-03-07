@@ -26,11 +26,13 @@ public class playerJetpack : MonoBehaviour
 
     //components
     Rigidbody2D rb;
+    private playerMovement player;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         fuel = jetCapacity;
+        player = GetComponent<playerMovement>();
     }
 
     // Update is called once per frame
@@ -42,13 +44,14 @@ public class playerJetpack : MonoBehaviour
 
     private void jetFly()
     {
-        if (Input.GetKey(KeyCode.Space) && fuel > 0f) //checks fuel before liftoff
+         if (Input.GetKey(KeyCode.Space) && fuel > 0f && !player.IsGrounded())
         {
             fuel -= jetFuelRate * Time.deltaTime; //makes fuel meter go brr
 
             rb.AddForce(Vector2.up * jetForce); //force added for jumping
             effect.Play();
-        } else
+        }
+        else
         {
             effect.Stop();
         }
