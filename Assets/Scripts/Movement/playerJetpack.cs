@@ -50,6 +50,7 @@ public class playerJetpack : MonoBehaviour
         jetThrust();
          if (Input.GetKey(KeyCode.Space) && fuel > 0f && !player.IsGrounded())
         {
+            player.anim.SetBool("isFlying", true);
             fuel -= jetFuelRate * Time.deltaTime; //makes fuel meter go brr
 
             rb.AddForce(Vector2.up * jetForce); //force added for jumping
@@ -58,6 +59,7 @@ public class playerJetpack : MonoBehaviour
         else
         {
             effect.Stop();
+            player.anim.SetBool("isFlying", false);
         }
     }
 

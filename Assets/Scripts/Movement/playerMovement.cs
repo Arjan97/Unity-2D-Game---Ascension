@@ -40,12 +40,13 @@ public class playerMovement : MonoBehaviour
     //components
     private ConstantForce2D myConstantForce;
     private Rigidbody2D rb;
-
+    public Animator anim;
     // Start is called before the first frame update
     void Start()
     {
         myConstantForce = GetComponent<ConstantForce2D>();
         rb = GetComponent<Rigidbody2D>(); //rb equals the rigidbody on the player
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -64,6 +65,7 @@ public class playerMovement : MonoBehaviour
     {
         if (isWallSliding && canWallJump)
         {
+            anim.SetBool("isJumping", false);
             WallJump();
         } else 
         {
@@ -79,6 +81,7 @@ public class playerMovement : MonoBehaviour
         {
             coyoteTimeCounter = coyoteTime;
             //doubleJump= false;
+            anim.SetBool("isJumping", false);
         }
         else
         {
@@ -88,6 +91,8 @@ public class playerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             jumpBufferCounter = jumpBufferTime;
+
+            anim.SetBool("isJumping", true);
             /*if (IsGrounded() || doubleJump)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
@@ -111,6 +116,7 @@ public class playerMovement : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
             coyoteTimeCounter = 0f;
+            anim.SetBool("isJumping", true);
         }
     }
 
@@ -122,6 +128,7 @@ public class playerMovement : MonoBehaviour
         {
             Vector2 direction = new Vector2(wallJumpDirection.x * -facingDirection, wallJumpDirection.y);
             rb.AddForce(direction, ForceMode2D.Impulse);
+            anim.SetBool("isJumping", true);
         }
     }
 
@@ -130,7 +137,11 @@ public class playerMovement : MonoBehaviour
         if (IsGrounded())
         {
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
-        } else if(!IsGrounded() && !isWallSliding && horizontal != 0){
+            anim.SetFloat("Speed", Mathf.Abs(horizontal));
+            anim.SetBool("isJumping", false);
+
+        }
+        else if(!IsGrounded() && !isWallSliding && horizontal != 0){
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
         }
 
@@ -153,10 +164,12 @@ public class playerMovement : MonoBehaviour
         if(IsTouchingWall() && !IsGrounded() && rb.velocity.y < 0) 
         {
             isWallSliding = true;
+            anim.SetBool("isSliding", true);
         }
         else
         {
             isWallSliding = false;
+            anim.SetBool("isSliding", false);
         }
     }
 

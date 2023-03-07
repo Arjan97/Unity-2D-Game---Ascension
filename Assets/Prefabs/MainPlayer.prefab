@@ -25,8 +25,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6904251563951863581}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.06, y: 1.1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.7134, z: 0}
+  m_LocalScale: {x: 1.06, y: 1.3691211, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6904251565378367823}
@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 6904251565378367816}
   - component: {fileID: 6904251565378367819}
   - component: {fileID: 6904251565378367812}
+  - component: {fileID: 707902249}
   m_Layer: 0
   m_Name: MainPlayer
   m_TagString: Player
@@ -164,9 +165,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 0.06736618, b: 0.9716981, a: 1}
-  m_FlipX: 0
+  m_Sprite: {fileID: 6084859605308855041, guid: 9c447c54c8e0416e9446cadb88c48fd3, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -209,18 +210,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.708268}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.1}
+    oldSize: {x: 2.7692308, y: 2.3076923}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 1.3521937}
   m_EdgeRadius: 0
 --- !u!114 &6904251565378367819
 MonoBehaviour:
@@ -234,10 +235,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3234ae1415777b34aa17c1077ede3d72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jetForce: 10
+  jetForce: 20
   jetCapacity: 100
-  jetFuelRate: 10
+  jetFuelRate: 20
   fuel: 0
+  canFly: 0
   fuelThrust: 33
   thrustForce: 7000
   thrustDelay: 5
@@ -265,6 +267,27 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  anim: {fileID: 0}
+--- !u!95 &707902249
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6904251565378367822}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 391d26b157c83ec4d9bfc7ee251ee54f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &6904251565489554034
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,7 +314,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6904251565489554034}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.08, y: -0.71, z: 0}
+  m_LocalPosition: {x: 0.008, y: -0.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5102,8 +5125,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6904251565572315175}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0072, y: -0.472, z: 0}
-  m_LocalScale: {x: 1.06035, y: 0.11199, z: 1}
+  m_LocalPosition: {x: -0.0114, y: 0.0908, z: 0}
+  m_LocalScale: {x: 0.8991466, y: 0.12749453, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6904251565378367823}
