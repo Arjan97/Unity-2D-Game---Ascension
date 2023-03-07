@@ -12,7 +12,7 @@ public class reFueler : MonoBehaviour
     {
         // Check if the other collider is the player
         playerJetpack jetpack = other.GetComponent<playerJetpack>();
-        if (jetpack != null)
+        if (jetpack != null && jetpack.canFly)
         {
             // Add fuel to the jetpack and play the pickup sound
             jetpack.AddFuel(fuelAmount);

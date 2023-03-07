@@ -40,21 +40,18 @@ public class playerMovement : MonoBehaviour
     //components
     private ConstantForce2D myConstantForce;
     private Rigidbody2D rb;
-    private playerJetpack jet;
 
     // Start is called before the first frame update
     void Start()
     {
         myConstantForce = GetComponent<ConstantForce2D>();
         rb = GetComponent<Rigidbody2D>(); //rb equals the rigidbody on the player
-        jet = GetComponent<playerJetpack>();
     }
 
     // Update is called once per frame
     void Update()
     {
         Jumps();
-        JetToggle();
         CheckIfWallSliding();
         Flip();
     }
@@ -126,16 +123,6 @@ public class playerMovement : MonoBehaviour
             Vector2 direction = new Vector2(wallJumpDirection.x * -facingDirection, wallJumpDirection.y);
             rb.AddForce(direction, ForceMode2D.Impulse);
         }
-    }
-
-    private void JetToggle()
-    {
-        //toggle jetpack
-        if (Input.GetKeyUp(KeyCode.J))
-        {
-            jet.enabled = !jet.enabled;
-        }
-
     }
 
     private void ApplyMovement()

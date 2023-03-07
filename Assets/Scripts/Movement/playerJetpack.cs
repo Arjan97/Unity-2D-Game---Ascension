@@ -11,6 +11,7 @@ public class playerJetpack : MonoBehaviour
     public float jetCapacity = 100f;
     public float jetFuelRate = 30f;
     public float fuel;
+    public bool canFly;
 
     //thrust
     public float fuelThrust = 20f;
@@ -38,12 +39,15 @@ public class playerJetpack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        jetFly();
-        jetThrust();
+        if (canFly)
+        {
+            jetFly();
+        }
     }
 
     private void jetFly()
     {
+        jetThrust();
          if (Input.GetKey(KeyCode.Space) && fuel > 0f && !player.IsGrounded())
         {
             fuel -= jetFuelRate * Time.deltaTime; //makes fuel meter go brr
@@ -90,7 +94,18 @@ public class playerJetpack : MonoBehaviour
     //draw the fuel meter on screen
     void OnGUI()
     {
-        GUI.Box(new Rect(10, 10, 100, 20), "Fuel: " + fuel.ToString("F0"));
-        //GUI.Box(new Rect(Screen.width - 110, 10, 100, 20), "Can thrust: " + canThrust);
+        if(canFly)
+        {
+            GUI.Box(new Rect(10, 10, 100, 20), "Fuel: " + fuel.ToString("F0"));
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Jetpack"))
+        {
+            canFly = true;
+            Destroy(collision.gameObject);
+        }
     }
 }
