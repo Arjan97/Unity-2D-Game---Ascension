@@ -40,8 +40,11 @@ public class playerMovement : MonoBehaviour
     //components
     private ConstantForce2D myConstantForce;
     private Rigidbody2D rb;
+
+    //anims/effects
     public Animator anim;
-    // Start is called before the first frame update
+    public ParticleSystem dust;
+
     void Start()
     {
         myConstantForce = GetComponent<ConstantForce2D>();
@@ -98,6 +101,7 @@ public class playerMovement : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
                 doubleJump = !doubleJump;
             }*/
+            dust.Play();
         }
         else
         {
@@ -143,11 +147,13 @@ public class playerMovement : MonoBehaviour
         }
         else if(!IsGrounded() && !isWallSliding && horizontal != 0){
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+            dust.Stop();
         }
 
         if (Input.GetAxis("Vertical") < 0)
         {
             canWallSlide = false;
+            dust.Stop();
         }
 
         if (isWallSliding && canWallSlide)
@@ -155,6 +161,8 @@ public class playerMovement : MonoBehaviour
             if (rb.velocity.y < -wallSlideSpeed)
             {
                 rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
+
+                dust.Play();
             }
         }
     }
@@ -180,6 +188,7 @@ public class playerMovement : MonoBehaviour
             facingDirection = facingDirection * -1;
             isFacingRight = !isFacingRight;
             transform.Rotate(0.0f, 180.0f, 0.0f);
+            dust.Play();
         }
     }
 
