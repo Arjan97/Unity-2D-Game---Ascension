@@ -1452,6 +1452,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a858cdbe5a395d7459ab0bb51d2d2083, type: 3}
+--- !u!50 &1751089168 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 6904251565378367817, guid: 12214d5da20ed2c4a990d6cc6aa0b469, type: 3}
+  m_PrefabInstance: {fileID: 6904251564676762220}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1791820553
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2129,6 +2134,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6904251565378367819, guid: 12214d5da20ed2c4a990d6cc6aa0b469, type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 1751089168}
+    - target: {fileID: 6904251565378367819, guid: 12214d5da20ed2c4a990d6cc6aa0b469, type: 3}
+      propertyPath: jetForce
+      value: 6666
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904251565378367819, guid: 12214d5da20ed2c4a990d6cc6aa0b469, type: 3}
+      propertyPath: fuelThrust
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904251565378367819, guid: 12214d5da20ed2c4a990d6cc6aa0b469, type: 3}
+      propertyPath: jetFuelRate
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904251565378367819, guid: 12214d5da20ed2c4a990d6cc6aa0b469, type: 3}
+      propertyPath: thrustDelay
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904251565378367819, guid: 12214d5da20ed2c4a990d6cc6aa0b469, type: 3}
+      propertyPath: thrustForce
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6904251565378367822, guid: 12214d5da20ed2c4a990d6cc6aa0b469, type: 3}
       propertyPath: m_Name
       value: Player

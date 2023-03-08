@@ -26,7 +26,7 @@ public class playerJetpack : MonoBehaviour
     public ParticleSystem effect;
 
     //components
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     private playerMovement player;
 
     void Start()
@@ -42,18 +42,18 @@ public class playerJetpack : MonoBehaviour
         if (canFly)
         {
             jetFly();
+            //jetThrust();
         }
     }
 
     private void jetFly()
     {
-        jetThrust();
          if (Input.GetKey(KeyCode.Space) && fuel > 0f && !player.IsGrounded())
         {
             player.anim.SetBool("isFlying", true);
             fuel -= jetFuelRate * Time.deltaTime; //makes fuel meter go brr
 
-            rb.AddForce(Vector2.up * jetForce); //force added for jumping
+            rb.AddForce(Vector2.up * (jetForce * Time.deltaTime)); //force added for jumping
             effect.Play();
         }
         else
@@ -77,9 +77,10 @@ public class playerJetpack : MonoBehaviour
 
             horizontalMove = Input.GetAxisRaw("Horizontal");
             thrustDirection = new Vector2(Mathf.Sign(horizontalMove), 0f);
+            //rb.velocity = thrustDirection * thrustForce * Time.deltaTime;
 
-            rb.AddForce(thrustDirection * thrustForce);
-            Debug.Log("thrusting to" + thrustDirection);
+            rb.AddForce(thrustDirection * thrustForce, ForceMode2D.Impulse);
+            Debug.Log("thrusting to" + horizontalMove);
             fuel -= fuelThrust;
             StartCoroutine(thrustDelayTimer(thrustDelay));
         }
