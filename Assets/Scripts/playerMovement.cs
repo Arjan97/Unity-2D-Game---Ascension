@@ -9,20 +9,22 @@ public class playerMovement : MonoBehaviour
     public float speed = 10f;
     private bool isFacingRight = true;
     private float horizontal;
+    private bool moveable = true;
 
     //wall slide
-    private bool isTouchingWall;
     public Transform wallCheck;
     public float wallCheckDistance;
     private bool isWallSliding;
     public float wallSlideSpeed;
     private bool canWallSlide = true;
+    public float wallSlideDuration = 8f;
     //wall jump
     public float wallJumpDuration;
     bool canWallJump = true;
+    private bool hasWallJumped = false;
     private int facingDirection = 1;
     [SerializeField] private Vector2 wallJumpDirection;
-
+    [SerializeField] private LayerMask wallLayerMask;
     //jump
     private bool isJumping;
     public float jumpingPower = 16f;
@@ -55,31 +57,47 @@ public class playerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Jumps();
+        horizontal = Input.GetAxisRaw("Horizontal");
+        if (moveable)
+        {
+            Flip();
+            Jumps();
+        }
+
         CheckIfWallSliding();
-        Flip();
+        CheckIfMoveable();
     }
     //fixed is called twice per frame
     private void FixedUpdate()
     {
+        if (moveable)
+        {
             ApplyMovement();
+        }
+    }
+    private void CheckIfMoveable()
+    {
+        if (IsGrounded() || IsTouchingWall() && canWallSlide)
+        {
+            moveable = true;
+            canWallSlide = true;
+        }
     }
     private void Jumps()
     {
-        if (isWallSliding && canWallJump)
+        if (isWallSliding && canWallJump && IsTouchingWall())
         {
             anim.SetBool("isJumping", false);
             WallJump();
-        } else 
+        } else if (IsGrounded())
         {
+            canWallJump= true;
             Jump();
         }
     }
 
     private void Jump()
     {
-        horizontal = Input.GetAxisRaw("Horizontal");
-
         if (IsGrounded() && !Input.GetButton("Jump"))
         {
             coyoteTimeCounter = coyoteTime;
@@ -127,12 +145,16 @@ public class playerMovement : MonoBehaviour
     private void WallJump()
     {
         //wallslide jump
-        Debug.Log("walljumping smeh");
-        if (Input.GetButton("Jump"))
+        if (Input.GetButton("Jump") && !hasWallJumped)
         {
             Vector2 direction = new Vector2(wallJumpDirection.x * -facingDirection, wallJumpDirection.y);
             rb.AddForce(direction, ForceMode2D.Impulse);
             anim.SetBool("isJumping", true);
+
+            //canWallJump = false;
+            Debug.Log("walljumping smeh");
+
+            StartCoroutine(WallJumpCooldown());
         }
     }
 
@@ -143,7 +165,7 @@ public class playerMovement : MonoBehaviour
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
             anim.SetFloat("Speed", Mathf.Abs(horizontal));
             anim.SetBool("isJumping", false);
-
+            hasWallJumped = false;
         }
         else if(!IsGrounded() && !isWallSliding && horizontal != 0){
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
@@ -156,13 +178,15 @@ public class playerMovement : MonoBehaviour
             dust.Stop();
         }
 
+
         if (isWallSliding && canWallSlide)
         {
             if (rb.velocity.y < -wallSlideSpeed)
             {
                 rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
-
+                StartCoroutine(WallSlideDuration());
                 dust.Play();
+                Debug.Log("wallsliding..");
             }
         }
     }
@@ -172,13 +196,23 @@ public class playerMovement : MonoBehaviour
         if(IsTouchingWall() && !IsGrounded() && rb.velocity.y < 0) 
         {
             isWallSliding = true;
+
             anim.SetBool("isSliding", true);
         }
-        else
+        else if (!canWallSlide)
+        {
+            anim.SetBool("isSliding", false);
+        } else
         {
             isWallSliding = false;
             anim.SetBool("isSliding", false);
         }
+    }
+    private IEnumerator WallJumpCooldown()
+    {
+        hasWallJumped = true;
+        yield return new WaitForSeconds(0.3f);
+        hasWallJumped = false;
     }
 
     private void Flip()
@@ -200,7 +234,7 @@ public class playerMovement : MonoBehaviour
     private bool IsTouchingWall()
     {
 
-        return Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, groundLayer);
+        return Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, wallLayerMask);
     }
 
     private IEnumerator JumpCooldown()
@@ -210,8 +244,15 @@ public class playerMovement : MonoBehaviour
         isJumping = false;
     }
 
+    private IEnumerator WallSlideDuration()
+    {
+       // canWallSlide = false;
+        yield return new WaitForSeconds(wallSlideDuration);
+        canWallSlide = false;
+    }
+
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y, wallCheck.position.z));
+        //Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y, wallCheck.position.z));
     }
 }
