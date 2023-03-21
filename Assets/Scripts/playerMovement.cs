@@ -25,6 +25,9 @@ public class playerMovement : MonoBehaviour
     private int facingDirection = 1;
     [SerializeField] private Vector2 wallJumpDirection;
     [SerializeField] private LayerMask wallLayerMask;
+    private Coroutine wallJumpCoroutine;
+    private float lastWallJump;
+
     //jump
     private bool isJumping;
     public float jumpingPower = 16f;
@@ -145,16 +148,22 @@ public class playerMovement : MonoBehaviour
     private void WallJump()
     {
         //wallslide jump
-        if (Input.GetButton("Jump") && !hasWallJumped)
+        if (Input.GetButton("Jump") && !hasWallJumped && !IsGrounded() && lastWallJump != gameObject.transform.position.x)
         {
+            if (wallJumpCoroutine != null)
+            {
+                StopCoroutine(wallJumpCoroutine);
+            }
+            //StartCoroutine(DisableMovement(1f));
             Vector2 direction = new Vector2(wallJumpDirection.x * -facingDirection, wallJumpDirection.y);
             rb.AddForce(direction, ForceMode2D.Impulse);
             anim.SetBool("isJumping", true);
 
-            //canWallJump = false;
-            Debug.Log("walljumping smeh");
+            hasWallJumped = true;
+            //StartCoroutine(WallJumpCooldown());
+            wallJumpCoroutine = StartCoroutine(WallJumpCooldown());
+            lastWallJump = gameObject.transform.position.x;
 
-            StartCoroutine(WallJumpCooldown());
         }
     }
 
@@ -166,6 +175,8 @@ public class playerMovement : MonoBehaviour
             anim.SetFloat("Speed", Mathf.Abs(horizontal));
             anim.SetBool("isJumping", false);
             hasWallJumped = false;
+            canWallSlide = true;
+            lastWallJump = 0;
         }
         else if(!IsGrounded() && !isWallSliding && horizontal != 0){
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
@@ -186,7 +197,6 @@ public class playerMovement : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
                 StartCoroutine(WallSlideDuration());
                 dust.Play();
-                Debug.Log("wallsliding..");
             }
         }
     }
@@ -210,7 +220,6 @@ public class playerMovement : MonoBehaviour
     }
     private IEnumerator WallJumpCooldown()
     {
-        hasWallJumped = true;
         yield return new WaitForSeconds(0.3f);
         hasWallJumped = false;
     }
@@ -244,11 +253,19 @@ public class playerMovement : MonoBehaviour
         isJumping = false;
     }
 
+    IEnumerator DisableMovement(float time)
+    {
+        moveable = false;
+        yield return new WaitForSeconds(time);
+        moveable= true;
+    }
     private IEnumerator WallSlideDuration()
     {
-       // canWallSlide = false;
+         canWallSlide = true;
+        Debug.Log("wallslide cooling smeh");
         yield return new WaitForSeconds(wallSlideDuration);
         canWallSlide = false;
+        Debug.Log("wallslide cooling cannot");
     }
 
     private void OnDrawGizmos()

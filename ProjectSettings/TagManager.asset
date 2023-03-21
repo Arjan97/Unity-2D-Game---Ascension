@@ -7,6 +7,7 @@ TagManager:
   - Vine
   - Ground
   - Jetpack
+  - Wall
   layers:
   - Default
   - TransparentFX
