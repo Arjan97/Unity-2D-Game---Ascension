@@ -7,7 +7,7 @@ public class playerMovement : MonoBehaviour
 {
     //movementbasics
     public float speed = 10f;
-    private bool isFacingRight = true;
+    public bool isFacingRight = true;
     private float horizontal;
     private bool moveable = true;
 
