@@ -18,6 +18,10 @@ public class PlayerHealth : MonoBehaviour
     public float regenRate = 0.1f; // Amount of health regenerated per second
     private float timeSinceLastDamage; // Time since the player last took damage
 
+    public static Transform currentSpawnPoint;
+    public static Transform currentCheckpoint;
+
+
     private void Start()
     {
         currentHealth = maxHealth;
@@ -25,9 +29,13 @@ public class PlayerHealth : MonoBehaviour
         pmove = GetComponent<playerMovement>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         previousHealth = currentHealth;
-
+        currentSpawnPoint = transform;
     }
-
+    public static void SetCheckpoint(Transform checkpoint)
+    {
+        currentCheckpoint = checkpoint;
+        currentSpawnPoint = checkpoint;
+    }
     private void Update()
     {
         if (Time.time - timeSinceLastDamage >= regenDelay && currentHealth < maxHealth)
@@ -74,7 +82,20 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
-        // Code to handle player death
-        Debug.Log("Player has died.");
+        if (currentCheckpoint != null)
+        {
+            transform.position = currentCheckpoint.position;
+        }
+        else if (currentSpawnPoint != null)
+        {
+            transform.position = currentSpawnPoint.position;
+        }
+        else
+        {
+            transform.position = Vector3.zero;
+        }
+
+        // Reset health
+        currentHealth = maxHealth;
     }
 }
