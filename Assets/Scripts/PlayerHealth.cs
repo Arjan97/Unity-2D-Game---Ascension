@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int maxHealth = 3;
-    private int currentHealth;
+    public float maxHealth = 3;
+    public float currentHealth;
     public float invincibilityTime = 0.3f;
+    private float previousHealth;
 
     public float knockbackForce = 15f;
     private Rigidbody2D rb;
     private playerMovement pmove;
     private SpriteRenderer spriteRenderer;
+
+    public float regenDelay = 5f; // Delay before regenerating health
+    public float regenRate = 0.1f; // Amount of health regenerated per second
+    private float timeSinceLastDamage; // Time since the player last took damage
 
     private void Start()
     {
@@ -19,12 +24,24 @@ public class PlayerHealth : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         pmove = GetComponent<playerMovement>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        previousHealth = currentHealth;
+
     }
 
-    public void TakeDamage(int damageAmount)
+    private void Update()
+    {
+        if (Time.time - timeSinceLastDamage >= regenDelay && currentHealth < maxHealth)
+        {
+            currentHealth += regenRate * Time.deltaTime;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        }
+    }
+
+    public void TakeDamage(float damageAmount)
     {
         currentHealth -= damageAmount;
         Debug.Log("Player took " + damageAmount + " damage.");
+
         if (currentHealth <= 0)
         {
             Die();
@@ -34,6 +51,7 @@ public class PlayerHealth : MonoBehaviour
             // Player takes damage
             StartCoroutine(TakeDamageCoroutine());
         }
+        timeSinceLastDamage = Time.time;
     }
     private IEnumerator TakeDamageCoroutine()
     {
