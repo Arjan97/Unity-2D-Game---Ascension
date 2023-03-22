@@ -7,8 +7,8 @@ public class Checkpoint : MonoBehaviour
     public bool isActivated = false; // is this checkpoint activated?
     public Sprite activatedSprite; // sprite for activated checkpoint
     public Sprite deactivatedSprite;
-
     private SpriteRenderer spriteRenderer; // reference to the sprite renderer component
+
 
     private void Start()
     {
