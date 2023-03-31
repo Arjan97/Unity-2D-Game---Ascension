@@ -6,7 +6,7 @@ public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 3;
     public float currentHealth;
-    public float invincibilityTime = 0.3f;
+    public float invincibilityTime = 0.5f;
     private float previousHealth;
 
     public float knockbackForce = 15f;
@@ -17,6 +17,7 @@ public class PlayerHealth : MonoBehaviour
     public float regenDelay = 5f; // Delay before regenerating health
     public float regenRate = 0.1f; // Amount of health regenerated per second
     private float timeSinceLastDamage; // Time since the player last took damage
+    private bool isInvincible = false; // Whether the player is currently invincible
 
     public static Transform currentSpawnPoint;
     public static Transform currentCheckpoint;
@@ -47,22 +48,28 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(float damageAmount)
     {
-        currentHealth -= damageAmount;
-        Debug.Log("Player took " + damageAmount + " damage.");
+        if (!isInvincible)
+        {
+            currentHealth -= damageAmount;
+            Debug.Log("Player took " + damageAmount + " damage.");
 
-        if (currentHealth <= 0)
-        {
-            Die();
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
+            else
+            {
+                // Player takes damage
+                StartCoroutine(TakeDamageCoroutine());
+            }
+            timeSinceLastDamage = Time.time;
         }
-        else
-        {
-            // Player takes damage
-            StartCoroutine(TakeDamageCoroutine());
-        }
-        timeSinceLastDamage = Time.time;
+       
     }
     private IEnumerator TakeDamageCoroutine()
     {
+        // Make player invincible for a short period of time
+        isInvincible = true;
         // Make player invincible for a short period of time
         pmove.enabled = false;
         if (!pmove.isFacingRight)
@@ -75,9 +82,12 @@ public class PlayerHealth : MonoBehaviour
         }
 
         spriteRenderer.color = new Color(1f, 1f, 1f, 0.5f);
-        yield return new WaitForSeconds(invincibilityTime);
+        yield return new WaitForSeconds(0.2f);
         pmove.enabled = true;
+        yield return new WaitForSeconds(invincibilityTime);
         spriteRenderer.color = Color.white;
+        isInvincible = false;
+
     }
 
     private void Die()
