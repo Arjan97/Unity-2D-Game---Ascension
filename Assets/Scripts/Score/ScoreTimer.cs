@@ -33,7 +33,7 @@ public class ScoreTimer : MonoBehaviour
     private void Update()
     {
         highScore = PlayerPrefs.GetInt(highScoreKey).ToString();
-        Debug.Log("Elapsed time: " + time + ", High score: " + highScore);
+        //Debug.Log("Elapsed time: " + time + ", High score: " + highScore);
     }
 
     public void StartTimer()
