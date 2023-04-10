@@ -90,7 +90,7 @@ public class PlayerHealth : MonoBehaviour
 
     }
 
-    private void Die()
+    public void Die()
     {
         if (currentCheckpoint != null)
         {
