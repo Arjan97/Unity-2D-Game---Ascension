@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
 
     public static Transform currentSpawnPoint;
     public static Transform currentCheckpoint;
-
+    private AudioSource ass;
 
     private void Start()
     {
@@ -31,6 +32,7 @@ public class PlayerHealth : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         previousHealth = currentHealth;
         currentSpawnPoint = transform;
+        ass = GetComponent<AudioSource>();
     }
     public static void SetCheckpoint(Transform checkpoint)
     {
@@ -39,11 +41,12 @@ public class PlayerHealth : MonoBehaviour
     }
     private void Update()
     {
+        /*
         if (Time.time - timeSinceLastDamage >= regenDelay && currentHealth < maxHealth)
         {
             currentHealth += regenRate * Time.deltaTime;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        }
+        } */
     }
 
     public void TakeDamage(float damageAmount)
@@ -52,16 +55,21 @@ public class PlayerHealth : MonoBehaviour
         {
             currentHealth -= damageAmount;
             Debug.Log("Player took " + damageAmount + " damage.");
+            ass.Play();
 
             if (currentHealth <= 0)
             {
-                Die();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+            else if (currentHealth % 0.5f != 0)
+            {
+                StartCoroutine(TakeDamageCoroutine());
             }
             else
             {
-                // Player takes damage
-                StartCoroutine(TakeDamageCoroutine());
+                Die();
             }
+
             timeSinceLastDamage = Time.time;
         }
        
@@ -106,6 +114,6 @@ public class PlayerHealth : MonoBehaviour
         }
 
         // Reset health
-        currentHealth = maxHealth;
+       // currentHealth = maxHealth;
     }
 }

@@ -9,7 +9,7 @@ public class MountedLaser : MonoBehaviour
     public GameObject laserPrefab;
     public float shootingInterval = 1f;
     public float shootingRange = 10f;
-    public float damage = 1.5f;
+    public float damage = 0.5f;
     public float laserSpeed = 15f;
     private float timeSinceLastShot = 0f;
     private Transform player;
@@ -25,7 +25,6 @@ public class MountedLaser : MonoBehaviour
     }
     void Update()
     {
-
         if (player != null && Vector2.Distance(transform.position, player.position) < shootingRange)
         {
             timeSinceLastShot += Time.deltaTime;
@@ -55,6 +54,9 @@ public class MountedLaser : MonoBehaviour
 
         // Set the velocity of the laser beam to move towards the player
         rb.velocity = direction * laserSpeed;
+
+        // Play laser sound effect
+        laserBeam.GetComponent<AudioSource>().Play();
 
         // Destroy the laser beam after 5 seconds
         Destroy(laserBeam, 5f);

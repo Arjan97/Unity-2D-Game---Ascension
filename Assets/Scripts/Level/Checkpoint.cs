@@ -9,9 +9,11 @@ public class Checkpoint : MonoBehaviour
     public Sprite deactivatedSprite;
     private SpriteRenderer spriteRenderer; // reference to the sprite renderer component
 
+    private AudioSource ass;
 
     private void Start()
     {
+        ass = GetComponent<AudioSource>();
         spriteRenderer = GetComponent<SpriteRenderer>(); // get the sprite renderer component
     }
     private void OnTriggerEnter2D(Collider2D other)
@@ -19,7 +21,7 @@ public class Checkpoint : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             SetCheckpoint(); // set the checkpoint
-
+            ass.Play();
             //activated = true;
            // PlayerHealth.SetCheckpoint(transform);
         }

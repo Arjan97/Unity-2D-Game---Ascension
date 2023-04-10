@@ -97,9 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0080233768435a4596340718e349ba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   laserPrefab: {fileID: 8531230109956994232, guid: 907c76dfdcf65ce41b609979d7a67053, type: 3}
   shootingInterval: 4
   shootingRange: 25
-  damage: 1.5
+  damage: 0.5
   laserSpeed: 20
