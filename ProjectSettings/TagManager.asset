@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Jetpack
   - Wall
+  - GameManager
   layers:
   - Default
   - TransparentFX

@@ -11,6 +11,10 @@ public class UIManager : MonoBehaviour
     public Sprite emptyHeartSprite;
     public Image[] hearts;
 
+    public Sprite emptyKey;
+    public Sprite fullKey;
+    public Image[] keys;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +22,10 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < hearts.Length; i++)
         {
             hearts[i].sprite = fullHeartSprite;
+        }
+        for (int i = 0; i < GameManager.Instance.keysNeeded; i++)
+        {
+            keys[i].sprite = fullKey;
         }
     }
 
@@ -41,6 +49,22 @@ public class UIManager : MonoBehaviour
             {
                 // Empty heart
                 hearts[i].sprite = emptyHeartSprite;
+            }
+        }
+        for (int i = 0; i < GameManager.Instance.keysNeeded; i++)
+        {
+            keys[i].sprite = emptyKey;
+            if (GameManager.Instance.keysPickedUp >= i + 1)
+            {
+                keys[i].sprite = fullKey;
+                //keys[i].gameObject.SetActive(true);
+
+            }
+            else
+            {
+                keys[i].sprite = emptyKey;
+               // keys[i].gameObject.SetActive(false);
+
             }
         }
 

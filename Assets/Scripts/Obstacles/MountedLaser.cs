@@ -6,19 +6,26 @@ using static UnityEditor.PlayerSettings;
 
 public class MountedLaser : MonoBehaviour
 {
-    public Transform player;
     public GameObject laserPrefab;
     public float shootingInterval = 1f;
     public float shootingRange = 10f;
     public float damage = 1.5f;
     public float laserSpeed = 15f;
     private float timeSinceLastShot = 0f;
+    private Transform player;
+
     void Start()
     {
         timeSinceLastShot = shootingInterval;
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+        }
     }
     void Update()
     {
+
         if (player != null && Vector2.Distance(transform.position, player.position) < shootingRange)
         {
             timeSinceLastShot += Time.deltaTime;

@@ -148,7 +148,7 @@ public class playerMovement : MonoBehaviour
     private void WallJump()
     {
         //wallslide jump
-        if (Input.GetButton("Jump") && !hasWallJumped && !IsGrounded() && lastWallJump != gameObject.transform.position.x)
+        if (Input.GetButton("Jump") && !IsGrounded())
         {
             if (wallJumpCoroutine != null)
             {
@@ -159,7 +159,7 @@ public class playerMovement : MonoBehaviour
             rb.AddForce(direction, ForceMode2D.Impulse);
             anim.SetBool("isJumping", true);
 
-            hasWallJumped = true;
+            //hasWallJumped = true;
             //StartCoroutine(WallJumpCooldown());
             wallJumpCoroutine = StartCoroutine(WallJumpCooldown());
             lastWallJump = gameObject.transform.position.x;
@@ -185,7 +185,7 @@ public class playerMovement : MonoBehaviour
 
         if (Input.GetAxis("Vertical") < 0)
         {
-            canWallSlide = false;
+            //canWallSlide = false;
             dust.Stop();
         }
 
@@ -264,7 +264,7 @@ public class playerMovement : MonoBehaviour
          canWallSlide = true;
         Debug.Log("wallslide cooling smeh");
         yield return new WaitForSeconds(wallSlideDuration);
-        canWallSlide = false;
+        //canWallSlide = false;
         Debug.Log("wallslide cooling cannot");
     }
 
